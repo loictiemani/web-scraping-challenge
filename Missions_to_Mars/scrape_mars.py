@@ -11,52 +11,47 @@ from bs4 import BeautifulSoup as bs
 import requests
 import os
 import json
+import time
 
 
 # In[2]:
 
-
-executable_path = {'executable_path': ChromeDriverManager().install()}
-browser = Browser('chrome', **executable_path, headless=False)
-
+def init_chrome():
+    executable_path = {'executable_path': ChromeDriverManager().install()}
+    browser = Browser('chrome', **executable_path, headless=False)
+    return browser
 
 # In[3]:
 
+def mars_news():
+    browser = init_chrome()
+    url = 'https://mars.nasa.gov/news/'
+    browser.visit(url)
+    html = browser.html
 
-url = 'https://mars.nasa.gov/news/'
-browser.visit(url)
-html = browser.html
+    # In[4]:
+    # Create BeautifulSoup object; parse with 'html.parser'
+    soup = bs(html, 'html.parser')
+    print(soup.prettify())
 
+    # In[5]:
+    content = soup.find("div", class_ ='content_page')
 
-# In[4]:
+    # In[6]:
+    #Extract title text
+    news_title = content.find_all("div", class_ ='content_title')
 
-
-# Create BeautifulSoup object; parse with 'html.parser'
-soup = bs(html, 'html.parser')
-print(soup.prettify())
-
-
-# In[5]:
-
-
-content = soup.find("div", class_ ='content_page')
-
-
-# In[6]:
+    print(news_title[0].text.strip())
 
 
-#Extract title text
-news_title = content.find_all("div", class_ ='content_title')
-
-print(news_title[0].text.strip())
+    # In[7]:
 
 
-# In[7]:
+    # Print all latest paragraph texts
+    paragraphs = content.find_all("div", class_ = 'article_teaser_body')
+    paragraphs[0].text
 
-
-# Print all paragraph texts
-paragraphs = content.find_all("div", class_ = 'article_teaser_body')
-paragraphs[0].text
+    return (title, paragraph)
 
 
 # # JPL Mars Space Images - Featured Image
@@ -64,7 +59,8 @@ paragraphs[0].text
 
 # In[8]:
 
-
+def JPL_image():
+    
 url ='https://www.jpl.nasa.gov/spaceimages/?search=&category=Mars'
 browser.visit(url)
 html = browser.html
