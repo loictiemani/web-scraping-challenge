@@ -48,9 +48,9 @@ def mars_news():
     # Print all latest paragraph texts
     paragraphs = content.find_all("div", class_ = 'article_teaser_body')
     paragraphs[0].text
-
-    return (news_title, paragraphs)
     browser.quit()
+    return (news_title, paragraphs)
+    
 
 # # JPL Mars Space Images - Featured Image 
 
@@ -67,8 +67,9 @@ def JPL_image():
     soup = bs(html, 'html.parser')
     featured_img = soup.find("img", class_='main_image')['src']
     pic_url = f"https://www.jpl.nasa.gov{featured_img}"
-    return pic_url
     browser.quit()
+    return pic_url
+    
 
 
 # # Mars Facts
@@ -85,13 +86,14 @@ def Mars_Facts():
     rights = list(Mars_facts[0][0])
     lefts = list(Mars_facts[0][1])
     mars_facts_df = pd.DataFrame ({'Name': rights,'Values':lefts})
-    return mars_facts_df
     browser.quit()
+    return mars_facts_df
+    
 
  # Mars Hemispheres
 
 def Mars_Hemispheres():
-    browser =init_chrome
+    browser =init_chrome ()
 
     USGS_Astrogeology_url =  'https://astrogeology.usgs.gov/search/results?q=hemisphere+enhanced&k1=target&v1=Mars'
     base_USGS_URL = USGS_Astrogeology_url.split('gov/')[0]
@@ -130,6 +132,7 @@ def Mars_Hemispheres():
         print (hemisphere_image_urls[i]['title'])
         print (hemisphere_image_urls[i]['img_url'] + '\n')
     print (hemisphere_image_urls)
-    return hemisphere_image_urls
     browser.quit()
+    return hemisphere_image_urls
+    
 

@@ -6,25 +6,40 @@ import scrape_mars
 app = Flask(__name__)
 
 # Use PyMongo to establish Mongo connection
-mongo = PyMongo(app, uri="mongodb://localhost:27017/mars_app")
-
+mongo = PyMongo(app, uri="mongodb://localhost:27017/mars_db")
+db = mongo.db
+collection = db['mars_data']
 
 # Route to render index.html template using data from Mongo
 @app.route("/")
-def home():
-    mars_data = mongo.db.collection.find_one()
-    return render_template("index.html", mars=mars_data)
+def index():
+    try:
+        mars_data = mongo.db.collection.find_one()
+        return render_template("index.html", mars_info=mars_data)
+    except:
+        return render_template("empty_scrape.html", mars_info = mars_data)
+
+
 
 @app.route("/scrape")
 def scrape():
-
-        # Run the scrape function
-    mars_info = scrape_mars.scrape_info()
-
+     # Run the scrape function  
     # Update the Mongo database using update and upsert=True
-    mongo.db.collection.update({}, mars_info, upsert=True)
-
+    collection.insert_many(scrape_mars.mars_news())
+    collection.insert_many(
+            [
+                {'featured_img_full':
+                scrape_mars.JPL_image()}
+            ]
+            )
+    collection.insert_many(scrape_mars.Mars_Facts())
+    collection.insert_many(scrape_mars.Mars_Hemispheres())
     # Redirect back to home page
+    return redirect("/")
+
+@app.route("/clear_data")
+def clear_data():  
+    collection.delete_many({})
     return redirect("/")
 
 if __name__ == "__main__":
