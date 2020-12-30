@@ -13,11 +13,10 @@ collection = db['mars_data']
 # Route to render index.html template using data from Mongo
 @app.route("/")
 def index():
-    try:
-        mars_data = mongo.db.collection.find_one()
-        return render_template("index.html", mars_info=mars_data)
-    except:
-        return render_template("empty_scrape.html", mars_info = mars_data)
+    mars_info = list(collection.find())
+    #print (mars_info)
+    return render_template("index.html", mars_info=mars_info)
+
 
 
 
@@ -33,8 +32,8 @@ def scrape():
             ]
             )
     collection.insert_many(scrape_mars.Mars_Facts())
-    collection.insert_many(scrape_mars.Mars_Hemispheres())
-    # Redirect back to home page
+    #collection.insert_many(scrape_mars.Mars_Hemispheres())
+    # Redirect back to home page"""
     return redirect("/")
 
 @app.route("/clear_data")

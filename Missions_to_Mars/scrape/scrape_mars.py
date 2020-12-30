@@ -26,20 +26,19 @@ def mars_news():
     url = 'https://mars.nasa.gov/news/'
     browser.visit(url)
     html = browser.html
-
+    return_list = []
     # In[4]:
     # Create BeautifulSoup object; parse with 'html.parser'
     soup = bs(html, 'html.parser')
-    print(soup.prettify())
+    #print(soup.prettify())
 
-    # In[5]:
     content = soup.find("div", class_ ='content_page')
 
     # In[6]:
     #Extract title text
     news_title = content.find_all("div", class_ ='content_title')
 
-    print(news_title[0].text.strip())
+    n0 =news_title[0].text.strip()
 
 
     # In[7]:
@@ -47,9 +46,10 @@ def mars_news():
 
     # Print all latest paragraph texts
     paragraphs = content.find_all("div", class_ = 'article_teaser_body')
-    paragraphs[0].text
+    p0 =paragraphs[0].text
     browser.quit()
-    return (news_title, paragraphs)
+    return_list.append ({'newsTitle':n0,'newsText':p0})
+    return (return_list)
     
 
 # # JPL Mars Space Images - Featured Image 
@@ -76,18 +76,19 @@ def JPL_image():
 
 def Mars_Facts():
     browser =init_chrome()
-
+    returned_facts_list = []
     Mars_facts_url = 'https://space-facts.com/mars/'
     browser.visit(Mars_facts_url)
-    html = browser.html
-    soup = bs(html, 'html.parser')
     Mars_facts = pd.read_html(Mars_facts_url)
     Mars_facts
     rights = list(Mars_facts[0][0])
     lefts = list(Mars_facts[0][1])
-    mars_facts_df = pd.DataFrame ({'Name': rights,'Values':lefts})
-    browser.quit()
-    return mars_facts_df
+    for i in range (len (rights)):
+        returned_facts_list.append ({rights[i].strip(":"): lefts [i]})
+    browser.quit()    
+    return returned_facts_list
+    
+    
     
 
  # Mars Hemispheres
@@ -98,6 +99,7 @@ def Mars_Hemispheres():
     USGS_Astrogeology_url =  'https://astrogeology.usgs.gov/search/results?q=hemisphere+enhanced&k1=target&v1=Mars'
     base_USGS_URL = USGS_Astrogeology_url.split('gov/')[0]
     browser.visit(USGS_Astrogeology_url)
+    print (USGS_Astrogeology_url)
     html = browser.html
     soup =bs(html, 'html.parser')
     visit_list = []
@@ -109,7 +111,6 @@ def Mars_Hemispheres():
         if temps_st not in visit_list:
             visit_list.append (temps_st)
     print (visit_list)
-
 
     img_url_list = []
     title_list = []
@@ -134,5 +135,3 @@ def Mars_Hemispheres():
     print (hemisphere_image_urls)
     browser.quit()
     return hemisphere_image_urls
-    
-
