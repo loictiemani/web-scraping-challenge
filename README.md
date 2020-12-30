@@ -63,4 +63,8 @@ Used MongoDB with Flask templating to create a new HTML page that displays all o
 * Used Bootstrap to structure your HTML template.
 
 Final Webpage Looks Like this:
-![Image 1](images/fig1.png)
+![Images 1](Images/fig1.png)
+![Images 2](Images/Fig2.png)
+![Images 3](Images/Fig3.png)
+![Images 4](Images/Fig4.png)
+
